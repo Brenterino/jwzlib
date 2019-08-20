@@ -177,7 +177,7 @@ public final class WzProperty<E> extends WzObject<WzProperty<E>, WzProperty<?>> 
 
                         data = in.decodeBuffer(len - blockSize);
                     } else {
-                        data = in.readBytes(len);
+                        data = in.readBytes(len - 1);
                     }
 
                     canvas.setValue(new PNG(width, height, format, data));

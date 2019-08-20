@@ -17,7 +17,7 @@
 */
 package wz.util;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -31,7 +31,7 @@ public final class GenericUtil {
 
 	// probably better way of doing this
 	public static Map combineMaps(Map m1, Map m2) {
-		HashMap ret = new HashMap();
+		Map ret = new LinkedHashMap<>();
 		ret.putAll(m1);
 		ret.putAll(m2);
 		return ret;

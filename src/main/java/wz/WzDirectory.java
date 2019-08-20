@@ -17,7 +17,6 @@
 */
 package wz;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -35,8 +34,8 @@ public final class WzDirectory extends WzObject<WzDirectory, WzObject<?, ?>> {
 	private int blocksize;
 	private int offset = 0;
 	private Map<String, WzObject<?, ?>> combined;
-	private final HashMap<String, WzObject<WzImage, ?>> images;
-	private final HashMap<String, WzObject<WzDirectory, ?>> directories;
+	private final Map<String, WzObject<WzImage, ?>> images;
+	private final Map<String, WzObject<WzDirectory, ?>> directories;
 
 	public WzDirectory(String n) {
 		directories = new LinkedHashMap<>();
@@ -46,7 +45,7 @@ public final class WzDirectory extends WzObject<WzDirectory, WzObject<?, ?>> {
 
 	public WzDirectory(String n, int off, int size, int cs) {
 		directories = new LinkedHashMap<>();
-		images = new HashMap<>();
+		images = new LinkedHashMap<>();
 		name = n;
 		offset = off;
 		checksum = cs;

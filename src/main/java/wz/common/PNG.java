@@ -27,7 +27,6 @@ import java.awt.image.Raster;
 import java.awt.image.SampleModel;
 import java.awt.image.WritableRaster;
 import java.util.zip.Inflater;
-
 import wz.util.DDSLineReader;
 
 /**

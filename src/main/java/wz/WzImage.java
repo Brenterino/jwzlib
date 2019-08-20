@@ -24,6 +24,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import wz.io.WzInputStream;
@@ -42,7 +43,7 @@ public final class WzImage extends WzObject<WzImage, WzProperty<?>> {
 	private boolean parsed;
 	private WzInputStream store;
 	private boolean alone = false;
-	private final HashMap<String, WzProperty<?>> children;
+	private final Map<String, WzProperty<?>> children;
 
 	public WzImage(String n, WzInputStream in) {
 		this(n, 4, 0, 0);
@@ -52,7 +53,7 @@ public final class WzImage extends WzObject<WzImage, WzProperty<?>> {
 
 	public WzImage(String n, int off, int sz, int cs) {
 		name = n;
-		children = new HashMap<>();
+		children = new LinkedHashMap<>();
 		checksum = cs;
 		blocksize = sz;
 		offset = off;
@@ -144,8 +145,7 @@ public final class WzImage extends WzObject<WzImage, WzProperty<?>> {
 	}
 
 	@Override
-	public WzProperty<?> getChild(String name)
-	{
+	public WzProperty<?> getChild(String name) {
 		return getChildren().get(name);
 	}
 

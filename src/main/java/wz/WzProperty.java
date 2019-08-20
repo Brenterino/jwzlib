@@ -18,9 +18,9 @@
 package wz;
 
 import java.awt.Point;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
-
 import wz.common.MP3;
 import wz.common.PNG;
 import wz.io.WzInputStream;
@@ -36,7 +36,7 @@ public final class WzProperty<E> extends WzObject<WzProperty<E>, WzProperty<?>> 
 	private String name;
 	private int blocksize;
 	private int offset;
-	private HashMap<String, WzProperty<?>> children;
+	private Map<String, WzProperty<?>> children;
 
 	public WzProperty(String n, E val, Type p) {
 		this(n, val, p, false);
@@ -47,7 +47,7 @@ public final class WzProperty<E> extends WzObject<WzProperty<E>, WzProperty<?>> 
 		value = val;
 		pType = p;
 		if (contain) {
-			children = new HashMap<>();
+			children = new LinkedHashMap<>();
 		}
 	}
 
@@ -244,7 +244,7 @@ public final class WzProperty<E> extends WzObject<WzProperty<E>, WzProperty<?>> 
 	}
 
 	@Override
-	public HashMap<String, WzProperty<?>> getChildren() {
+	public Map<String, WzProperty<?>> getChildren() {
 		return children;
 	}
 

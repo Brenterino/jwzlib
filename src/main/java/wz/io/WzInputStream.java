@@ -215,7 +215,8 @@ public abstract class WzInputStream {
 	public String decryptAsciiStr(byte[] str) {
 		byte a = (byte) 0xAA;
 		for (int i = 0; i < str.length; i++) {
-			str[i] = (byte) (str[i] ^ a ^ key[i]);
+			byte keyNum = key == null ? 0 : key[i];
+			str[i] = (byte) (str[i] ^ a ^ keyNum);
 			a++; // changes the bits that get flipped
 		}
 		return new String(str);

@@ -26,6 +26,7 @@ import java.awt.image.PixelInterleavedSampleModel;
 import java.awt.image.Raster;
 import java.awt.image.SampleModel;
 import java.awt.image.WritableRaster;
+import java.util.Arrays;
 import java.util.zip.Inflater;
 import wz.util.DDSLineReader;
 
@@ -234,7 +235,7 @@ public final class PNG {
 		if (o instanceof PNG) {
 			PNG other = (PNG) o;
 			return other.height == height && other.width == width
-					&& other.data == data;
+					&& Arrays.equals(other.data, data);
 		}
 		return false;
 	}

@@ -30,7 +30,7 @@ import wz.common.WzTool;
 public abstract class WzInputStream {
 
 	protected int hash;
-	protected byte[] key;
+	protected byte[] key, unicodeKey;
 	protected WzHeader header;
 	protected ThreadLocal<AtomicInteger> positions =
 			new ThreadLocal<AtomicInteger>() {
@@ -62,10 +62,18 @@ public abstract class WzInputStream {
 
 	public void setKey(byte[] data) {
 		key = data;
+		unicodeKey = new byte[0x7FFF];
+		for(int i = 0; i < unicodeKey.length; i++){
+			unicodeKey[i] = (byte) ((key[2 * i + 1] << 8) + key[2 * i]);
+		}
 	}
 
 	public byte[] getKey() {
 		return key;
+	}
+	
+	public byte[] getUnicodeKey(){
+		return unicodeKey;
 	}
 
 	public final Integer getPosition() {
@@ -187,12 +195,12 @@ public abstract class WzInputStream {
 			if (b == 0x7F) {
 				strLength = readInteger();
 			} else {
-				strLength = (int) b;
+				strLength = b;
 			}
 			if (strLength < 0) {
 				return "";
 			}
-			return decryptUnicodeStr(readBytes(strLength * 2));
+			return decryptUnicodeStr(strLength);
 		} else {
 			if (b == -128) {
 				strLength = readInteger();
@@ -202,43 +210,36 @@ public abstract class WzInputStream {
 			if (strLength < 0) {
 				return "";
 			}
-			return decryptAsciiStr(readBytes(strLength));
+			return decryptAsciiStr(strLength);
 		}
 	}
 
 	/**
 	 * Decrypts an ASCII string.
 	 *
-	 * @param str the bytes that are used to create the decrypted string.
 	 * @return the decrypted string.
 	 */
-	public String decryptAsciiStr(byte[] str) {
-		byte a = (byte) 0xAA;
-		for (int i = 0; i < str.length; i++) {
-			str[i] = (byte) (str[i] ^ a ^ key[i]);
-			a++; // changes the bits that get flipped
+	public String decryptAsciiStr(int length) {
+		int a = 0xAA;
+		byte[] data = new byte[length];
+		for (int i = 0; i < length; i++) {
+			data[i] = (byte) (readByte() ^ a++ ^ key[i]);
 		}
-		return new String(str);
+		return new String(data);
 	}
 
 	/**
 	 * Decrypts a Unicode string.
 	 *
-	 * @param str the bytes that are used to create the decrypted string.
 	 * @return the decrypted string.
 	 */
-	public String decryptUnicodeStr(byte[] str) {
+	public String decryptUnicodeStr(int length) {
 		int invFlip = 0xAAAA;
-		char[] charRet = new char[str.length / 2];
-		for (int i = 0; i < str.length; i++) {
-			str[i] = (byte) (str[i] ^ key[i]);
+		char[] data = new char[length];
+		for (int i = 0; i < length; i++) {
+			data[i] = (char) ((short) (readShort() ^ invFlip++ ^ unicodeKey[i]));
 		}
-		for (int i = 0; i < (str.length / 2); i++) {
-			char toXor = (char) ((str[i] << 8) | str[i + 1]);
-			charRet[i] = (char) (toXor ^ invFlip);
-			invFlip++; // changes the bits that get flipped
-		}
-		return String.valueOf(charRet);
+		return new String(data);
 	}
 
 	public int readOffset() {

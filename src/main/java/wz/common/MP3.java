@@ -60,8 +60,8 @@ public final class MP3 {
 	public boolean equals(Object o) {
 		if (o instanceof MP3) {
 			MP3 other = (MP3) o;
-			return other.data == data && other.length == length &&
-					other.header == header;
+			return other.length == length && Arrays.equals(other.header , header)
+					&& Arrays.equals(other.data, data);
 		}
 		return false;
 	}

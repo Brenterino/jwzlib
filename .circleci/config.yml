@@ -1,0 +1,22 @@
+version: 2.1
+
+orbs:
+  maven: circleci/maven@0.0.12
+
+workflows:
+  maven_test:
+    jobs:
+      - maven/test: # checkout, build, test, and upload test results
+          filters:
+            branches:
+              ignore:
+                - master
+
+  maven_deploy:
+    jobs:
+      - maven/test:
+          command: '-s .circleci/settings.xml deploy'
+          filters:
+            branches:
+              only:
+                - master
